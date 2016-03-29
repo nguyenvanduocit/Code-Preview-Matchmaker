@@ -88,10 +88,18 @@ func main() {
 	postMessageArgs := slack.PostMessageParameters{
 		Username:botname,
 	};
-
-	targetChannelInfo, err := api.GetChannelInfo(targetChannelName);
+	//Get channel ID from channel name
+	channelList, err := api.GetChannels(true);
 	if err != nil {
-		log.Fatal(fmt.Sprintf("GetChannelInfo(%s) : %s\n", targetChannelName, err))
+		log.Fatal(fmt.Sprintf("GetChannels: %s\n", err))
+	}
+
+	var targetChannel slack.Channel
+	for _,channel := range channelList {
+		if(channel.Name == targetChannelName){
+			targetChannel = channel
+			break
+		}
 	}
 
 	users, err := api.GetUsers();
@@ -100,7 +108,7 @@ func main() {
 	}
 
 	var groupMembers []slack.User
-	for _, memberId := range targetChannelInfo.Members {
+	for _, memberId := range targetChannel.Members {
 		for _, user := range users {
 			if (memberId == user.ID && !user.IsBot) {
 				groupMembers = append(groupMembers, user)
@@ -110,10 +118,10 @@ func main() {
 
 	matchedResult, err := MatchMembers(groupMembers);
 	if err != nil {
-		log.Fatal(fmt.Sprintf("matchMembers %s\n", err))
+		log.Fatal(fmt.Sprintf("MatchMembers %s\n", err))
 	}
 
-	_, timeStamp, err := api.PostMessage(targetChannelName, matchedResult, postMessageArgs)
+	_, timeStamp, err := api.PostMessage(targetChannel.ID, matchedResult, postMessageArgs)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("PostMessage %s\n", err))
 	}
