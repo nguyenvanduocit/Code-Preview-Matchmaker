@@ -52,7 +52,7 @@ func main() {
 	flag.Parse()
 
 	//Only fire error if can not load .env and required arguments miss
-	if  token == "" || targetChannelName == "" || botname == "" {
+	if  token == "" || targetChannelName == "" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatal("Can not load .env")
