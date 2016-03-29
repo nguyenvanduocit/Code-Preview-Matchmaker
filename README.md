@@ -2,20 +2,15 @@
 Just another matchmaker to match slack channel's member to peer-peer groups for code preview.
 
 # Usage
-## Method 1 : Clone source
-1. Clone this repo
+## Method 1
+1. Download file
+    1. Windows : [matchmaker.exe](https://github.com/nguyenvanduocit/Code-Preview-Matchmaker/raw/master/build/matchmaker.exe)
+    2. OSX : [matchmaker_darwin](https://github.com/nguyenvanduocit/Code-Preview-Matchmaker/raw/master/build/matchmaker_darwin)
+    3. Linux : [matchmaker_linux](https://github.com/nguyenvanduocit/Code-Preview-Matchmaker/raw/master/build/matchmaker_linux)
+2. Config .env
+2. Run with .env or aguments
 ```
-git clone https://github.com/nguyenvanduocit/Code-Preview-Matchmaker.git
-```
-2. Rename .env.example to .env and config it
-3. Build :
-```
-cd Code-Preview-Matchmaker
-go build matchmaker.go`
-```
-4. Run :
-```
-./matchmaker
+./matchmaker -token=yourtoken -name=yourbotname -channel=targetchannel -debug=true
 ```
 
 ## Method 2
@@ -29,13 +24,18 @@ Code-Preview-Matchmaker -token=yourtoken -name=yourbotname -channel=targetchanne
 ```
 Make sure $GOPATH/bin added to the PATH
 
-## Method 3
-1. Download file
-    1. Windows : matchmaker.exe
-    2. OSX : matchmaker_darwin
-    3. Linux : matchmaker_linux
-2. Config .env
-2. Run with .env or aguments
+## Method 3 : Build from source
+1. Clone this repo
 ```
-./matchmaker -token=yourtoken -name=yourbotname -channel=targetchannel -debug=true
+git clone https://github.com/nguyenvanduocit/Code-Preview-Matchmaker.git
+```
+2. Rename .env.example to .env and config it
+3. Build :
+```
+cd Code-Preview-Matchmaker
+go build matchmaker.go`
+```
+4. Run :
+```
+./matchmaker
 ```
