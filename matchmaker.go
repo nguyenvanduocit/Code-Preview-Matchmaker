@@ -51,24 +51,35 @@ func main() {
 	flag.StringVar(&token, "token", "", "Slack token")
 	flag.Parse()
 
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	//Only fire error if can not load .env and required arguments miss
+	if  token == "" || targetChannelName == "" || botname == "" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Can not load .env")
+		}
+		if token == "" {
+			token = os.Getenv("SLACK_API_TOKEN")
+			if(token == ""){
+				log.Fatal("Can not get token")
+			}
+		}
+		if targetChannelName == "" {
+			targetChannelName = os.Getenv("SLACK_TARGET_CHANNEL")
+			if(targetChannelName == ""){
+				log.Fatal("Can not get target channel")
+			}
+		}
+		if debugFlag == "" {
+			debugFlag = os.Getenv("DEBUG")
+		}
+		if botname == "" {
+			botname = os.Getenv("SLACK_BOT_NAME")
+			if(botname == ""){
+				botname = "Code Preview Matchmaker"
+			}
+		}
 	}
 
-	if(token == ""){
-		token = os.Getenv("SLACK_API_TOKEN")
-	}
-	if(targetChannelName == ""){
-		targetChannelName = os.Getenv("SLACK_TARGET_CHANNEL")
-	}
-	if(debugFlag == ""){
-		debugFlag = os.Getenv("DEBUG")
-	}
-	if(botname == ""){
-		botname = os.Getenv("SLACK_BOT_NAME")
-	}
 
 	api := slack.New(token)
 	api.SetDebug(strings.ToUpper(debugFlag)=="TRUE")
@@ -80,14 +91,12 @@ func main() {
 
 	targetChannelInfo, err := api.GetChannelInfo(targetChannelName);
 	if err != nil {
-		fmt.Printf("GetChannelInfo(%s) : %s\n", targetChannelName, err)
-		return
+		log.Fatal(fmt.Sprintf("GetChannelInfo(%s) : %s\n", targetChannelName, err))
 	}
 
 	users, err := api.GetUsers();
 	if err != nil {
-		fmt.Printf("GetUsers %s\n", err)
-		return
+		log.Fatal(fmt.Sprintf("GetUsers %s\n", err))
 	}
 
 	var groupMembers []slack.User
@@ -101,15 +110,12 @@ func main() {
 
 	matchedResult, err := MatchMembers(groupMembers);
 	if err != nil {
-		fmt.Printf("matchMembers : %s\n", err)
-		return
+		log.Fatal(fmt.Sprintf("matchMembers %s\n", err))
 	}
 
 	_, timeStamp, err := api.PostMessage(targetChannelName, matchedResult, postMessageArgs)
 	if err != nil {
-		fmt.Printf("PostMessage %s\n", err)
-		return
+		log.Fatal(fmt.Sprintf("PostMessage %s\n", err))
 	}
-
 	fmt.Printf("Matched success at : %s", timeStamp)
 }
