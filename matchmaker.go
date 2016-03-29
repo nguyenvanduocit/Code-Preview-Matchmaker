@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"time"
 	"flag"
+	"strings"
 )
 
 //TODO make it faster. Currently, this method could waste time by swap more time for a element
@@ -17,7 +18,6 @@ func ShuffleArray(a []slack.User) {
 	length := len(a)
 	for i := range a {
 		j := rand.Intn(length)
-		fmt.Println(i, j)
 		a[i], a[j] = a[j], a[i]
 	}
 }
@@ -43,8 +43,12 @@ func MatchMembers(members []slack.User) (string, error) {
 }
 
 func main() {
-	var targetChannelName string
+	var targetChannelName, debugFlag, botname, token string
+
 	flag.StringVar(&targetChannelName, "channel", "", "Channel id")
+	flag.StringVar(&debugFlag, "debug", "", "Debug flag")
+	flag.StringVar(&botname, "name", "", "Bot name")
+	flag.StringVar(&token, "token", "", "Slack token")
 	flag.Parse()
 
 	err := godotenv.Load()
@@ -53,16 +57,25 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	slackApiToken := os.Getenv("SLACK_API_TOKEN")
+	if(token == ""){
+		token = os.Getenv("SLACK_API_TOKEN")
+	}
 	if(targetChannelName == ""){
 		targetChannelName = os.Getenv("SLACK_TARGET_CHANNEL")
 	}
+	if(debugFlag == ""){
+		debugFlag = os.Getenv("DEBUG")
+	}
+	if(botname == ""){
+		botname = os.Getenv("SLACK_BOT_NAME")
+	}
 
-	api := slack.New(slackApiToken)
-	api.SetDebug(true)
+	api := slack.New(token)
+	api.SetDebug(strings.ToUpper(debugFlag)=="TRUE")
+
 
 	postMessageArgs := slack.PostMessageParameters{
-		Username:os.Getenv("SLACK_BOT_NAME"),
+		Username:botname,
 	};
 
 	targetChannelInfo, err := api.GetChannelInfo(targetChannelName);
