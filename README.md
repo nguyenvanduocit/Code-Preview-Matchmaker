@@ -7,13 +7,13 @@ Just another matchmaker to match slack channel's member to peer-peer groups for 
 ```
 git clone https://github.com/nguyenvanduocit/Code-Preview-Matchmaker.git
 ```
-1. Rename .env.example to .env and config it
-2. Build :
+2. Rename .env.example to .env and config it
+3. Build :
 ```
 cd Code-Preview-Matchmaker
 go build matchmaker.go`
 ```
-3. Run :
+4. Run :
 ```
 ./matchmaker
 ```
@@ -34,7 +34,8 @@ Make sure $GOPATH/bin added to the PATH
     1. Windows : matchmaker.exe
     2. OSX : matchmaker_darwin
     3. Linux : matchmaker_linux
-2. Run
+2. Config .env
+2. Run with .env or aguments
 ```
 ./matchmaker -token=yourtoken -name=yourbotname -channel=targetchannel -debug=true
 ```
