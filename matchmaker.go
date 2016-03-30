@@ -22,24 +22,18 @@ func ShuffleArray(a []slack.User) {
 	}
 }
 
-func MatchMembers(members []slack.User) (string, error) {
-	groups := make(map[slack.User]slack.User)
+func MatchMembers(members []slack.User) string {
 	rand.Seed(time.Now().UnixNano()) //Make sure go generate different numbers
 	ShuffleArray(members)
+	messageText := ""
 	for index, member := range members {
 		nextIndex := index + 1;
 		if (nextIndex == len(members)) {
 			nextIndex = 0
 		}
-		groups[member] = members[nextIndex]
+		messageText += fmt.Sprintf("%s -> %s\n", member.Name, members[nextIndex].Name)
 	}
-
-	messageText := "```"
-	for userA, userB := range groups {
-		messageText += fmt.Sprintf("%s -> %s\n", userA.Name, userB.Name)
-	}
-	messageText += "```"
-	return messageText, nil
+	return fmt.Sprintf("Code preview for %s:\n ```%s```",time.Now().Local().Format(time.April), messageText)
 }
 
 func main() {
@@ -116,12 +110,7 @@ func main() {
 		}
 	}
 
-	matchedResult, err := MatchMembers(groupMembers);
-	if err != nil {
-		log.Fatal(fmt.Sprintf("MatchMembers %s\n", err))
-	}
-
-	_, timeStamp, err := api.PostMessage(targetChannel.ID, matchedResult, postMessageArgs)
+	_, timeStamp, err := api.PostMessage(targetChannel.ID, MatchMembers(groupMembers), postMessageArgs)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("PostMessage %s\n", err))
 	}
