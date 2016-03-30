@@ -13,7 +13,7 @@ import (
 )
 
 //TODO make it faster. Currently, this method could waste time by swap more time for a element
-//Ex. Swap i=0;j=4 then swap 0<->4; i=4;j=0 then swap 1<->4
+//Ex. if i=0;j=4 then swap 0<->4; i=4;j=0 then swap 1<->4
 func ShuffleArray(a []slack.User) {
 	length := len(a)
 	for i := range a {
@@ -45,13 +45,13 @@ func MatchMembers(members []slack.User) (string, error) {
 func main() {
 	var targetChannelName, debugFlag, botname, token string
 
-	flag.StringVar(&targetChannelName, "channel", "", "Channel id")
+	flag.StringVar(&targetChannelName, "channel", "", "Channel name")
 	flag.StringVar(&debugFlag, "debug", "", "Debug flag")
 	flag.StringVar(&botname, "name", "", "Bot name")
 	flag.StringVar(&token, "token", "", "Slack token")
 	flag.Parse()
 
-	//Only fire error if can not load .env and required arguments miss
+	//Only fire error if required arguments missing and an not get from .env
 	if  token == "" || targetChannelName == "" {
 		err := godotenv.Load()
 		if err != nil {
