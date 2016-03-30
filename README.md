@@ -16,11 +16,12 @@ Just another matchmaker to match slack channel's member to peer-peer groups for 
 ## Method 2
 ```
 go get github.com/nguyenvanduocit/Code-Preview-Matchmaker
-```Run
+```
+Run
 ```
 Code-Preview-Matchmaker -token=yourtoken -name=yourbotname -channel=targetchannel -debug=true
-```Make sure $GOPATH/bin added to the PATH
 ```
+Make sure $GOPATH/bin added to the PATH
 
 ## Method 3 : Build from source
 Clone this repo
