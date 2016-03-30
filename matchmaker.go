@@ -33,7 +33,7 @@ func MatchMembers(members []slack.User) string {
 		}
 		messageText += fmt.Sprintf("%s -> %s\n", member.Name, members[nextIndex].Name)
 	}
-	return fmt.Sprintf("Code preview for %s:\n ```%s```",time.Now().Local().Format(time.April), messageText)
+	return fmt.Sprintf("Code preview for %s:\n ```%s```",time.Now().Local().Format("2006-01-02"), messageText)
 }
 
 func main() {
@@ -47,19 +47,18 @@ func main() {
 
 	//Only fire error if required arguments missing and an not get from .env
 	if  token == "" || targetChannelName == "" {
-		err := godotenv.Load()
-		if err != nil {
+		if godotenv.Load() != nil {
 			log.Fatal("Can not load .env")
 		}
 		if token == "" {
-			token = os.Getenv("SLACK_API_TOKEN")
-			if(token == ""){
+			token = os.Getenv("SLACK_API_TOKEN");
+			if token == "" {
 				log.Fatal("Can not get token")
 			}
 		}
 		if targetChannelName == "" {
-			targetChannelName = os.Getenv("SLACK_TARGET_CHANNEL")
-			if(targetChannelName == ""){
+			targetChannelName = os.Getenv("SLACK_TARGET_CHANNEL");
+			if targetChannelName == "" {
 				log.Fatal("Can not get target channel")
 			}
 		}
@@ -67,8 +66,8 @@ func main() {
 			debugFlag = os.Getenv("DEBUG")
 		}
 		if botname == "" {
-			botname = os.Getenv("SLACK_BOT_NAME")
-			if(botname == ""){
+			botname = os.Getenv("SLACK_BOT_NAME");
+			if botname == "" {
 				botname = "Code Preview Matchmaker"
 			}
 		}
